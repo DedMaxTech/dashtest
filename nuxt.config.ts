@@ -17,7 +17,6 @@ export default defineNuxtConfig({
       cors: true
     }
   },
-  plugins: ['@hey-api/client-nuxt'],
   compatibilityDate: '2024-07-11',
 
   eslint: {

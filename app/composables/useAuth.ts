@@ -21,7 +21,8 @@ export const useAuth = () => {
         headers: { authorization: `Basic ${token.value}` },
         credentials: 'omit'
       })
-      user.value = me
+      console.log(me)
+      user.value = me.data
       return me
     } catch (e) {
       // токен невалиден — очищаем

@@ -1,4 +1,3 @@
-import type { Config } from '@hey-api/openapi-ts'
 
 export default {
   input: './openapi.json',
