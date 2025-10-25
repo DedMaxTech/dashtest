@@ -19,11 +19,13 @@ const userr = ref({
 
 const items = computed<DropdownMenuItem[][]>(() => ([[{
   type: 'label',
-  label: user.value.name,
-  avatar: user.value.avatar
+  label: user.value?.first_name,
 }], [{
-  label: 'Log out',
-  icon: 'i-lucide-log-out'
+  label: 'Выйти из аккаунта',
+  icon: 'i-lucide-log-out',
+  onSelect() {
+    useAuth().logout()
+  }
 }]]))
 </script>
 

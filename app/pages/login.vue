@@ -6,7 +6,7 @@ const { login, loading, error } = useAuth()
 
 const fields = ref<AuthFormField[]>([
   { name: 'email', type: 'text', label: 'Email' },
-  { name: 'password', type: 'password', label: 'Password' }
+  { name: 'password', type: 'password', label: 'Пароль' }
 ])
 
 const onSubmit = async (form: FormSubmitEvent<any>) => {
@@ -21,16 +21,16 @@ const onSubmit = async (form: FormSubmitEvent<any>) => {
 
 <template>
   <div class="min-h-screen grid place-items-center p-4">
-    <UModal :dismissible="false" :open="true">
+    <UModal :dismissible="false" :open="true" :close="false">
       <template #body>
         <div class="p-6 w-[min(92vw,28rem)]">
           <UAuthForm
-            title="Login"
+            title="Вход"
             :fields="fields"
             :loading="loading"
             class="max-w-md mx-auto"
             @submit="onSubmit"
-            submit-button-label="Sign in"
+            :submit="{ label: 'Войти через Сфера.Код' }"            
           />
           <UAlert
             v-if="error"

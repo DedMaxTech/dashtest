@@ -1,45 +1,26 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
+import type { RepositoryListItem } from '~/types/api'
 
-defineProps<{
-  collapsed?: boolean
-}>()
+defineProps<{ collapsed?: boolean }>()
 
-const teams = ref([{
-  label: 'Nuxt',
-  avatar: {
-    src: 'https://github.com/nuxt.png',
-    alt: 'Nuxt'
-  }
-}, {
-  label: 'NuxtHub',
-  avatar: {
-    src: 'https://github.com/nuxt-hub.png',
-    alt: 'NuxtHub'
-  }
-}, {
-  label: 'NuxtLabs',
-  avatar: {
-    src: 'https://github.com/nuxtlabs.png',
-    alt: 'NuxtLabs'
-  }
-}])
-const selectedTeam = ref(teams.value[0])
+const { repos } = useAuth()
+const { selectedRepo, setSelectedRepo } = useRepo()
 
-const items = computed<DropdownMenuItem[][]>(() => {
-  return [teams.value.map(team => ({
-    ...team,
-    onSelect() {
-      selectedTeam.value = team
-    }
-  })), [{
-    label: 'Create team',
-    icon: 'i-lucide-circle-plus'
-  }, {
-    label: 'Manage teams',
-    icon: 'i-lucide-cog'
-  }]]
+watchEffect(() => {
+  if (!selectedRepo.value && repos.value?.length) {
+    setSelectedRepo(repos.value[0]!)
+  }
 })
+
+const formatRepo = (repo?: RepositoryListItem) => repo ? `${repo.owner_name}/${repo.name}` : ''
+
+const items = computed<DropdownMenuItem[][]>(() => ([
+  repos.value.map(repo => ({
+    label: formatRepo(repo),
+    onSelect: () => setSelectedRepo(repo),
+  }))
+]))
 </script>
 
 <template>
@@ -49,20 +30,15 @@ const items = computed<DropdownMenuItem[][]>(() => {
     :ui="{ content: collapsed ? 'w-40' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
     <UButton
-      v-bind="{
-        ...selectedTeam,
-        label: collapsed ? undefined : selectedTeam?.label,
-        trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
-      }"
+      :label="collapsed ? undefined : formatRepo(selectedRepo || undefined)"
       color="neutral"
       variant="ghost"
       block
       :square="collapsed"
       class="data-[state=open]:bg-elevated"
       :class="[!collapsed && 'py-2']"
-      :ui="{
-        trailingIcon: 'text-dimmed'
-      }"
+      :ui="{ trailingIcon: 'text-dimmed' }"
+      trailing-icon="i-lucide-chevrons-up-down"
     />
   </UDropdownMenu>
 </template>
